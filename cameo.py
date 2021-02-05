@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
-
-import binascii
-from construct import *
-import cv2
-import fcntl
+import argparse
 import logging
+
+import cv2
 import numpy
-import time
+from construct import *
+import fcntl
 import sys
 
-from filters import *
+from filters.filter_add_text import FilterAddText
+from filters.filter_video import FilterVideo
+from filters.filterblur import FilterBlur
+from filters.filter_add_image import FilterAddImage
+from filters.filter_color import FilterColor
 
 V4L2_FIELD_NONE = 1
 V4L2_BUF_TYPE_VIDEO_OUTPUT = 2
