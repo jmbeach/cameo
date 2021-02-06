@@ -10,6 +10,7 @@ import sys
 
 from filters.filter_add_text import FilterAddText
 from filters.filter_background_blur import FilterBackgroundBlur
+from filters.filter_glow import FilterGlow
 from filters.filter_video import FilterVideo
 from filters.filter_blur import FilterBlur
 from filters.filter_add_image import FilterAddImage
@@ -88,6 +89,7 @@ def main(camera_in=0, camera_out=1, do_flip=False, thumbnail=False):
         "t": (FilterAddText,        [ "(be right back)" ]),
         "b": (FilterBlur,           []),
         "v": (FilterBackgroundBlur, []),
+        "g": (FilterGlow, ['img/glow.jpg']),
     }
 
     capture = open_capture(camera_in)

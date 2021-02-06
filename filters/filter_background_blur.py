@@ -1,8 +1,6 @@
 import cv2
 import numpy
-import numpy as np
 
-from filters.filter import Filter
 from filters.filter_blur import FilterBlur
 
 
