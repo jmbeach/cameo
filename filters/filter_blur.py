@@ -1,6 +1,5 @@
 import cv2
 import numpy
-import numpy as np
 
 from filters.filter import Filter
 
@@ -23,36 +22,27 @@ class FilterBlur(Filter):
 
         height, width, channels = frame.shape
 
-        blur_strength = 20
-        black = numpy.zeros((height, width, channels), numpy.uint8)
-        black[:, :] = (0, 0, 0)
-        white = numpy.zeros((height, width, channels), numpy.uint8)
-        white[:, :] = (255, 255, 255)
-        cutout = black.copy()
-        feather_mask = numpy.zeros((height, width, channels), numpy.uint8)
-        feather_mask[:, :] = (255, 255, 255)
-        y_margin = 25
-        for x, y, w, h in faces:
-            cutout[y - y_margin:height, x:x + w] += frame[y - y_margin:height, x:x + w]
-            feather_mask[y - y_margin:height, x:x + w] -= white[y - y_margin:height, x:x + w]
+        # https://stackoverflow.com/a/55509210
+        pixelized = frame.copy()
+        pixelized = cv2.resize(pixelized, (width // 12, height // 12), interpolation=cv2.INTER_LINEAR)
+        pixelized = cv2.resize(pixelized, (width, height), interpolation=cv2.INTER_NEAREST)
 
-        feather_mask = cv2.blur(feather_mask, (blur_strength, blur_strength))
+        blank = numpy.zeros((height, width, channels), numpy.uint8)
 
-        blurred = frame.copy()
-        blurred = cv2.blur(blurred, (blur_strength, blur_strength))
-        feathered = FilterBlur.alpha_blend(frame, blurred, feather_mask)
+        for x, y , w, h in faces:
+            blank[y:y+h,x:x+w] += pixelized[y:y+h,x:x+w]
 
-        return feathered
+        # create a mask from the given image
+        img2gray = cv2.cvtColor(blank, cv2.COLOR_BGR2GRAY)
+        ret, mask = cv2.threshold(img2gray, 10, 255, cv2.THRESH_BINARY)
+        mask_inv = cv2.bitwise_not(mask)
 
-    @staticmethod
-    # From https://stackoverflow.com/a/48274875/1834329
-    def alpha_blend(a, b, mask):
-        if mask.ndim == 3 and mask.shape[-1] == 3:
-            alpha = mask / 255.0
-        else:
-            alpha = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR) / 255.0
+        # apply this mask to the frame: this region is now black
+        frame_bg = cv2.bitwise_and(frame, frame, mask = mask_inv)
 
-        return cv2.convertScaleAbs((a * (1 - alpha)) + (b * alpha))
+        # add the image
+        frame = cv2.add(frame_bg, blank)
+        return frame
 
     @staticmethod
     def areas_overlap(a, b):
