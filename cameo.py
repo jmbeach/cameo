@@ -9,8 +9,9 @@ import fcntl
 import sys
 
 from filters.filter_add_text import FilterAddText
+from filters.filter_background_blur import FilterBackgroundBlur
 from filters.filter_video import FilterVideo
-from filters.filterblur import FilterBlur
+from filters.filter_blur import FilterBlur
 from filters.filter_add_image import FilterAddImage
 from filters.filter_color import FilterColor
 
@@ -81,12 +82,12 @@ def open_video_out(camera_out, width, height):
 def main(camera_in=0, camera_out=1, do_flip=False, thumbnail=False):
     current_filter = None
     keys = {
-        " ": (FilterColor,    [ (255, 0, 211) ]),
-        ")": (FilterAddImage, [ "img/smile.png" ]),
-        "a": (FilterAddImage, [ "img/applause.png" ]),
-        "t": (FilterAddText,  [ "(be right back)" ]),
-        "v": (FilterVideo,    [ "img/rick-astley-never-gonna-give-you-up-video.mp4" ]),
-        "b": (FilterBlur ,    []),
+        " ": (FilterColor,          [ (255, 0, 211) ]),
+        ")": (FilterAddImage,       [ "img/smile.png" ]),
+        "a": (FilterAddImage,       [ "img/applause.png" ]),
+        "t": (FilterAddText,        [ "(be right back)" ]),
+        "b": (FilterBlur,           []),
+        "v": (FilterBackgroundBlur, []),
     }
 
     capture = open_capture(camera_in)
