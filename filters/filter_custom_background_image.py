@@ -39,10 +39,7 @@ class FilterCustomBackgroundImage(FilterBlur):
 
         filtered_cutout = cutout.copy()
         filtered_cutout = cv2.cvtColor(filtered_cutout, cv2.COLOR_BGR2HSV)
-        h = int(cv2.getTrackbarPos('h', 'Preview'))
-        s = int(cv2.getTrackbarPos('s', 'Preview'))
-        v = int(cv2.getTrackbarPos('v', 'Preview'))
-        mask = cv2.inRange(frame, (h, s, v), (255, 255, 255))
+        mask = cv2.inRange(frame, (155, 135, 0), (255, 255, 255))
         # copy the mask 3 times to fit the frames
         mask_3d = np.repeat(mask[:, :, np.newaxis], 3, axis=2)
         # Combine the original with the blurred frame using the mask

@@ -9,10 +9,13 @@ device.
 
 ![Background blur screenshot](img/background_blur_example.png)
 
+![Custom background screenshot](img/custom_background_example.jpg)
+
 Current set of filters available through keyboard keys:
 
 - face blurring (`b`)
 - background blurring (`v`)
+- custom background (`s`)
 - reactions (`a`, `)`)
 - text (`t`)
 
