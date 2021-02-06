@@ -16,8 +16,7 @@ class FilterBlur(Filter):
         self.do_stop = False
         self.debug = False
 
-    @staticmethod
-    def pixelize(frame, faces):
+    def get_image(self, frame, faces):
         """Pixelize each face."""
 
         height, width, channels = frame.shape
@@ -122,12 +121,22 @@ class FilterBlur(Filter):
         for x, y, w, h in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), rgb, 2)
 
+    @staticmethod
+    # From https://stackoverflow.com/a/48274875/1834329
+    def alpha_blend(a, b, mask):
+        if mask.ndim == 3 and mask.shape[-1] == 3:
+            alpha = mask / 255.0
+        else:
+            alpha = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR) / 255.0
+
+        return cv2.convertScaleAbs((a * (1 - alpha)) + (b * alpha))
+
     def draw(self, frame):
         faces = FilterBlur.detect_faces(frame, FilterBlur.face_cascade)
         height, width, _ = frame.shape
         faces = FilterBlur.increase_face_area(faces, width, height)
         faces = FilterBlur.merge_faces(faces, width, frame)
-        frame = FilterBlur.pixelize(frame, faces)
+        frame = self.get_image(frame, faces)
         if self.debug:
             FilterBlur.mark_faces(frame, faces)
         self.last_frame = frame
