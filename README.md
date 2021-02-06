@@ -7,9 +7,12 @@ device.
 
 ![Zoom screenshot](img/zoom.png)
 
+![Background blur screenshot](img/background_blur_example.png)
+
 Current set of filters available through keyboard keys:
 
 - face blurring (`b`)
+- background blurring (`B`)
 - reactions (`a`, `)`)
 - text (`t`)
 

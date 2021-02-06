@@ -10,7 +10,7 @@ class FilterBackgroundBlur(FilterBlur):
     def get_image(self, frame, faces):
         height, width, channels = frame.shape
 
-        blur_strength = 20
+        blur_strength = 25
         black = numpy.zeros((height, width, channels), numpy.uint8)
         black[:, :] = (0, 0, 0)
         white = numpy.zeros((height, width, channels), numpy.uint8)
