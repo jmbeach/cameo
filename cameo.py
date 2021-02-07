@@ -10,7 +10,8 @@ import sys
 
 from filters.filter_add_text import FilterAddText
 from filters.filter_background_blur import FilterBackgroundBlur
-from filters.filter_custom_background_image import FilterCustomBackgroundImage, FilterGifFace
+from filters.filter_custom_background_image import FilterCustomBackgroundImage
+from filters.filter_gif_face import FilterGifFace
 from filters.filter_glow import FilterGlow
 from filters.filter_video import FilterVideo
 from filters.filter_blur import FilterBlur

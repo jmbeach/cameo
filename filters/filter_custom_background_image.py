@@ -1,53 +1,9 @@
 import cv2
 import numpy
 import numpy as np
-from PIL import Image
 
 from filters.filter_blur import FilterBlur
 
-
-class FilterGifFace(FilterBlur):
-    def __init__(self, img_path):
-        super(FilterBlur, self).__init__(duration=0)
-        self.img_path = img_path
-        self.do_stop = False
-        self.debug = False
-        self.gif = Image.open(self.img_path)
-        self.gif.save('./gif_background.png')
-
-    def get_image(self, frame, faces):
-        height, width, channels = frame.shape
-        try:
-            self.gif.seek(self.gif.tell() + 1)
-        except:
-            self.gif.close()
-            self.gif = Image.open(self.img_path)
-
-        self.gif.save('./gif_frame.png')
-        img = cv2.imread('./gif_frame.png', cv2.IMREAD_UNCHANGED)
-        background = cv2.imread('./gif_background.png', cv2.IMREAD_UNCHANGED)
-        img_height, img_width, img_channels = img.shape
-        if img_height > height or img_width > width:
-            img_height = int(img_height * 0.5)
-            img_width = int(img_width * 0.5)
-            img = cv2.resize(img, (img_height, img_width))
-            background = cv2.resize(background, (img_height, img_width))
-        for x, y, w, h in faces:
-            for x_img in range(img_width):
-                for y_img in range(img_height):
-                    if y + y_img >= height or x + x_img >= width:
-                        continue
-                    bg_pixel = background[y_img, x_img]
-                    if len(bg_pixel > 3) and bg_pixel[3] < 255:
-                        # don't draw bg
-                        'do nothing'
-                    else:
-                        frame[y + y_img, x + x_img] = (bg_pixel[0], bg_pixel[1], bg_pixel[2])
-                    pixel = img[y_img, x_img]
-                    if len(pixel) > 3 and pixel[3] < 255:
-                        continue
-                    frame[y + y_img, x + x_img] = (pixel[0], pixel[1], pixel[2])
-        return frame
 
 class FilterCustomBackgroundImage(FilterBlur):
     def __init__(self, img_path):
